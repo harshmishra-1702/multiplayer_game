@@ -121,7 +121,7 @@ function App() {
               <h1>THE MISSION<br /><em>ISN’T ADDING UP.</em></h1>
               <p className="intro-copy">A sabotage has crippled the expedition. The crew has the clues. Put them together before the trail goes cold.</p>
               <div className="mission-stats">
-                <div><span className="stat-label">CREW</span><strong>8—10</strong></div>
+                <div><span className="stat-label">CREW</span><strong>3—10</strong></div>
                 <span className="stat-divider" />
                 <div><span className="stat-label">ONE ROUND</span><strong>5 MIN</strong></div>
                 <span className="stat-divider" />
@@ -164,7 +164,7 @@ function App() {
                 <div className="lobby-copy">
                   <div className="eyebrow left"><span className="eyebrow-line" /> CREW ASSEMBLY</div>
                   <h1>YOU’RE ON<br /><em>THE SHIP.</em></h1>
-                  <p>Share the room code. Once eight investigators are on board, your crew can launch the mission.</p>
+                  <p>Share the room code. Three investigators can launch the mission; four or more gives the crew more clues to compare.</p>
                   <div className="room-code-box"><span>ROOM CODE</span><strong>{snapshot.code}</strong><button onClick={copyCode}>{copied ? "COPIED ✓" : "COPY CODE ↗"}</button></div>
                 </div>
                 <div className="crew-panel">
@@ -182,8 +182,8 @@ function App() {
                     ))}
                   </div>
                   <div className="lobby-action-row">
-                    <span className="waiting-note"><span className="pulse-ring" /> {connectedCount < 8 ? `${8 - connectedCount} more investigators needed` : "Crew ready for launch"}</span>
-                    {isHost ? <button className="primary-button launch-button" disabled={connectedCount < 8} onClick={() => sendAction({ type: "start" })}>LAUNCH MISSION <span>↗</span></button> : <span className="host-waiting">WAITING FOR HOST</span>}
+                    <span className="waiting-note"><span className="pulse-ring" /> {connectedCount < 3 ? `${3 - connectedCount} more investigator${3 - connectedCount === 1 ? "" : "s"} needed` : "Crew ready for launch"}</span>
+                    {isHost ? <button className="primary-button launch-button" disabled={connectedCount < 3} onClick={() => sendAction({ type: "start" })}>LAUNCH MISSION <span>↗</span></button> : <span className="host-waiting">WAITING FOR HOST</span>}
                   </div>
                 </div>
               </div>
