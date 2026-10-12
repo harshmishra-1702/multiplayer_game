@@ -5,12 +5,21 @@ export interface PublicPlayer {
   connected: boolean;
 }
 
+export interface ChatMessage {
+  id: string;
+  playerId: string;
+  playerName: string;
+  text: string;
+  sentAt: number;
+}
+
 export interface RoomSnapshot {
   code: string;
   phase: "lobby" | "investigation" | "voting" | "reveal";
   players: PublicPlayer[];
   capacity: number;
   serverNow: number;
+  chatMessages?: ChatMessage[];
   deadlineAt?: number | null;
   suspects?: CrewMember[];
   clue?: ClueCard;
@@ -57,4 +66,5 @@ export type ClientMessage =
   | { type: "start" }
   | { type: "share_clue" }
   | { type: "vote"; suspectId: string }
-  | { type: "new_round" };
+  | { type: "new_round" }
+  | { type: "chat"; text: string };
