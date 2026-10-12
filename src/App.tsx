@@ -252,7 +252,7 @@ function GameRound({
               {sharedClues.some((item) => item.playerId === getSavedCredentials(snapshot.code)?.playerId) ? "CLUE SHARED TO THE CREW ✓" : "SHARE CLUE WITH CREW"}
               <span className="button-arrow">↗</span>
             </button>
-            <div className="round-hint"><span>✳</span> Everyone is an investigator. The saboteur is a crew member in the case file.</div>
+            <div className="round-hint"><span>✳</span> Everyone is an investigator. Any clue still private joins the board when voting opens.</div>
           </section>
           <div className="round-side">
             <EvidenceBoard clues={sharedClues} suspects={suspects} clueCapacity={snapshot.players.length} />

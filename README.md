@@ -10,7 +10,7 @@ A cooperative space mystery for 8–10 investigators. Find the crew member who s
 - Reconnect with a private browser token after a temporary disconnection.
 - Launch when eight investigators are connected; rooms support up to ten.
 - Receive a private clue and choose when to share it to the synced evidence board.
-- Discuss for four minutes, then vote for one of six crew suspects for one minute.
+- Share and compare clues for four minutes, then vote for one of six crew suspects for one minute. Any private clues join the board when voting opens.
 - Reveal the saboteur and team result; the host can start another case with the same crew.
 - Rooms expire after 24 hours.
 

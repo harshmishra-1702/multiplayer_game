@@ -173,7 +173,7 @@ export class GameRoom extends DurableObject<Env> {
     }
     await this.ctx.storage.put("room", state);
     this.state = state;
-    if (revealNow) await this.ctx.storage.deleteAlarm();
+    if (revealNow) await this.ctx.storage.setAlarm(state.createdAt + ROOM_LIFETIME_MS);
     this.broadcast(state);
   }
 
@@ -206,6 +206,7 @@ export class GameRoom extends DurableObject<Env> {
       await this.ctx.storage.deleteAlarm();
       await this.ctx.storage.put("room", state);
       this.state = state;
+      await this.ctx.storage.setAlarm(state.createdAt + ROOM_LIFETIME_MS);
       this.broadcast(state);
       return;
     }
@@ -335,7 +336,7 @@ export class GameRoom extends DurableObject<Env> {
     if (finished) this.finishRound(state);
     await this.ctx.storage.put("room", state);
     this.state = state;
-    if (finished) await this.ctx.storage.deleteAlarm();
+    if (finished) await this.ctx.storage.setAlarm(state.createdAt + ROOM_LIFETIME_MS);
     this.broadcast(state);
   }
 
@@ -350,9 +351,9 @@ export class GameRoom extends DurableObject<Env> {
     }
     state.phase = "lobby";
     delete state.round;
-    await this.ctx.storage.deleteAlarm();
     await this.ctx.storage.put("room", state);
     this.state = state;
+    await this.ctx.storage.setAlarm(state.createdAt + ROOM_LIFETIME_MS);
     this.broadcast(state);
   }
 

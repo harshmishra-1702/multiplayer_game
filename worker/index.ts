@@ -34,7 +34,7 @@ export default {
     if (roomMatch && request.headers.get("Upgrade")?.toLowerCase() === "websocket") {
       const code = roomMatch[1].toUpperCase();
       const stub = env.ROOMS.get(env.ROOMS.idFromName(code));
-      return stub.fetch("https://room.internal/ws", request);
+      return stub.fetch(request);
     }
 
     return env.ASSETS.fetch(request);
