@@ -42,7 +42,7 @@ interface IncomingMessage {
 }
 
 const ROOM_CAPACITY = 10;
-const MINIMUM_CREW = 8;
+const MINIMUM_CREW = 3;
 const ROOM_LIFETIME_MS = 24 * 60 * 60 * 1000;
 const INVESTIGATION_MS = 4 * 60 * 1000;
 const VOTING_MS = 60 * 1000;
