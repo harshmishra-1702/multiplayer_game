@@ -1,5 +1,5 @@
 import { DurableObject } from "cloudflare:workers";
-import type { ClueCard, CrewMember, RoomSnapshot, SharedClue } from "../src/protocol";
+import type { ChatMessage, ClueCard, CrewMember, RoomSnapshot, SharedClue } from "../src/protocol";
 import { createCase } from "./case";
 
 interface Env {}
@@ -11,6 +11,7 @@ interface Player {
   host: boolean;
   connected: boolean;
   joinedAt: number;
+  lastChatAt?: number;
 }
 
 type GamePhase = RoomSnapshot["phase"];
@@ -31,6 +32,7 @@ interface RoomState {
   createdAt: number;
   phase: GamePhase;
   players: Player[];
+  chatMessages?: ChatMessage[];
   round?: RoundState;
 }
 
@@ -38,6 +40,7 @@ interface IncomingMessage {
   type?: unknown;
   name?: unknown;
   suspectId?: unknown;
+  text?: unknown;
   credentials?: { playerId?: unknown; reconnectToken?: unknown };
 }
 
@@ -139,6 +142,8 @@ export class GameRoom extends DurableObject<Env> {
       await this.submitVote(socket, state, player, message.suspectId);
     } else if (message.type === "new_round") {
       await this.resetRound(socket, state, player);
+    } else if (message.type === "chat") {
+      await this.postChat(state, player, message.text);
     } else {
       this.send(socket, { type: "error", message: "That action isn’t available." });
     }
@@ -271,6 +276,22 @@ export class GameRoom extends DurableObject<Env> {
     this.broadcast(state);
   }
 
+  private async postChat(state: RoomState, player: Player, rawText: unknown) {
+    if (typeof rawText !== "string") return;
+    const text = rawText.replace(/[\\u0000-\\u001f\\u007f]/g, " ").trim().slice(0, 300);
+    if (!text) return;
+
+    const now = Date.now();
+    if (now - (player.lastChatAt ?? 0) < 700) return;
+    player.lastChatAt = now;
+    state.chatMessages ??= [];
+    state.chatMessages.push({ id: makeId(), playerId: player.id, playerName: player.name, text, sentAt: now });
+    if (state.chatMessages.length > 100) state.chatMessages.splice(0, state.chatMessages.length - 100);
+    await this.ctx.storage.put("room", state);
+    this.state = state;
+    this.broadcast(state);
+  }
+
   private async startRound(socket: WebSocket, state: RoomState, player: Player) {
     if (!player.host) {
       this.send(socket, { type: "error", message: "Only the host can start the mission." });
@@ -382,6 +403,7 @@ export class GameRoom extends DurableObject<Env> {
       capacity: ROOM_CAPACITY,
       players: state.players.map(({ id, name, host, connected }) => ({ id, name, host, connected })),
       serverNow: Date.now(),
+      chatMessages: state.chatMessages ?? [],
     };
     const round = state.round;
     if (round) {
