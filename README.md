@@ -7,6 +7,7 @@ A cooperative space mystery for 3–10 investigators; four or more makes clue sh
 - Create a six-character room code or join an existing room.
 - Join with a callsign, without an account or installation.
 - See the room roster and connection status update live for everyone in that room.
+- Chat together in the room during the lobby and mission; recent messages stay available when players reconnect.
 - Reconnect with a private browser token after a temporary disconnection.
 - Launch when three investigators are connected; rooms support up to ten. Four or more players gives the crew more clues to compare.
 - Receive a private clue and choose when to share it to the synced evidence board.
