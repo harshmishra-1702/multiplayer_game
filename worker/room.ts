@@ -278,7 +278,7 @@ export class GameRoom extends DurableObject<Env> {
 
   private async postChat(state: RoomState, player: Player, rawText: unknown) {
     if (typeof rawText !== "string") return;
-    const text = rawText.replace(/[\\u0000-\\u001f\\u007f]/g, " ").trim().slice(0, 300);
+    const text = rawText.replace(/[\u0000-\u001f\u007f]/g, " ").trim().slice(0, 300);
     if (!text) return;
 
     const now = Date.now();
