@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { connectToRoom, createRoom, getSavedCredentials, type RoomConnection } from "./roomClient";
-import type { CrewMember, RoomSnapshot } from "./protocol";
+import type { ChatMessage, CrewMember, RoomSnapshot } from "./protocol";
 
 type LinkStatus = "connecting" | "connected" | "disconnected";
 
@@ -198,12 +198,74 @@ function App() {
                 onNewRound={() => sendAction({ type: "new_round" })}
               />
             )}
+            <ChatPanel
+              snapshot={snapshot}
+              myId={myId}
+              canSend={status === "connected"}
+              onSend={(text) => sendAction({ type: "chat", text })}
+            />
           </section>
         )}
       </section>
 
       <footer className="footer"><span>ORBITAL STORIES <i>©</i> 2189</span><span>ALL HANDS. ONE TRUTH.</span></footer>
     </main>
+  );
+}
+
+
+function ChatPanel({ snapshot, myId, canSend, onSend }: {
+  snapshot: RoomSnapshot;
+  myId?: string;
+  canSend: boolean;
+  onSend: (text: string) => void;
+}) {
+  const [draft, setDraft] = useState("");
+  const messages: ChatMessage[] = snapshot.chatMessages ?? [];
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (list) list.scrollTop = list.scrollHeight;
+  }, [messages.length]);
+
+  const submit = () => {
+    const text = draft.trim();
+    if (!text || !canSend) return;
+    onSend(text);
+    setDraft("");
+  };
+
+  return (
+    <section className="chat-panel" aria-label="Crew chat">
+      <div className="chat-heading">
+        <div><span className="panel-kicker">OPEN CREW CHANNEL</span><h2>Crew chat</h2></div>
+        <span className="chat-room-label">ROOM ONLY · {messages.length} MESSAGE{messages.length === 1 ? "" : "S"}</span>
+      </div>
+      <div className="chat-messages" ref={listRef} role="log" aria-live="polite" aria-relevant="additions">
+        {messages.length === 0 ? (
+          <div className="chat-empty"><span>⌁</span><p>Start the conversation. Your messages are shared with everyone in this room.</p></div>
+        ) : messages.map((message) => (
+          <article className={`chat-message ${message.playerId === myId ? "mine" : ""}`} key={message.id}>
+            <div className="chat-message-meta"><strong>{message.playerName}</strong><time dateTime={new Date(message.sentAt).toISOString()}>{new Date(message.sentAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</time></div>
+            <p>{message.text}</p>
+          </article>
+        ))}
+      </div>
+      <div className="chat-compose">
+        <input
+          aria-label="Write a crew chat message"
+          maxLength={300}
+          placeholder={canSend ? "Message your crew…" : "Reconnecting to crew chat…"}
+          value={draft}
+          disabled={!canSend}
+          onChange={(event) => setDraft(event.target.value)}
+          onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); submit(); } }}
+        />
+        <button type="button" onClick={submit} disabled={!canSend || !draft.trim()}>SEND <span>↗</span></button>
+      </div>
+      <p className="chat-footnote">Messages stay in this room until it expires.</p>
+    </section>
   );
 }
 
