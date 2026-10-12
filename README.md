@@ -1,6 +1,6 @@
 # Mission Control: The Sabotage
 
-A cooperative space mystery for 8–10 investigators. Find the crew member who sabotaged the Atlas-9 navigation array by pooling private clues and voting together.
+A cooperative space mystery for 3–10 investigators; four or more makes clue sharing richer. Find the crew member who sabotaged the Atlas-9 navigation array by pooling private clues and voting together.
 
 ## What works in this increment
 
@@ -8,7 +8,7 @@ A cooperative space mystery for 8–10 investigators. Find the crew member who s
 - Join with a callsign, without an account or installation.
 - See the room roster and connection status update live for everyone in that room.
 - Reconnect with a private browser token after a temporary disconnection.
-- Launch when eight investigators are connected; rooms support up to ten.
+- Launch when three investigators are connected; rooms support up to ten. Four or more players gives the crew more clues to compare.
 - Receive a private clue and choose when to share it to the synced evidence board.
 - Share and compare clues for four minutes, then vote for one of six crew suspects for one minute. Any private clues join the board when voting opens.
 - Reveal the saboteur and team result; the host can start another case with the same crew.
