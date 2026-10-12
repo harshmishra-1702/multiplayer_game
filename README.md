@@ -1,6 +1,6 @@
 # Mission Control: The Sabotage
 
-A cooperative space mystery for 8–10 investigators. This first increment builds the browser entry flow and authoritative multiplayer room lobby.
+A cooperative space mystery for 8–10 investigators. Find the crew member who sabotaged the Atlas-9 navigation array by pooling private clues and voting together.
 
 ## What works in this increment
 
@@ -8,9 +8,13 @@ A cooperative space mystery for 8–10 investigators. This first increment build
 - Join with a callsign, without an account or installation.
 - See the room roster and connection status update live for everyone in that room.
 - Reconnect with a private browser token after a temporary disconnection.
+- Launch when eight investigators are connected; rooms support up to ten.
+- Receive a private clue and choose when to share it to the synced evidence board.
+- Discuss for four minutes, then vote for one of six crew suspects for one minute.
+- Reveal the saboteur and team result; the host can start another case with the same crew.
 - Rooms expire after 24 hours.
 
-The clue, discussion, voting, and reveal phases are the next game increment.
+Everyone is an investigator. The saboteur is selected from the non-player expedition crew each round. Two forensic leads narrow the suspect list; comparing them reveals one unique suspect.
 
 ## Run locally
 

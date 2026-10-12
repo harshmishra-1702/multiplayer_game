@@ -1,4 +1,9 @@
-import type { JoinCredentials, RoomSnapshot, ServerMessage } from "./protocol";
+import type { ClientMessage, JoinCredentials, RoomSnapshot, ServerMessage } from "./protocol";
+
+export interface RoomConnection {
+  close: () => void;
+  send: (message: Exclude<ClientMessage, { type: "join" }>) => void;
+}
 
 const credentialsKey = (code: string) => `mission-control:${code}:credentials`;
 
@@ -75,7 +80,13 @@ export function connectToRoom(
     callbacks.onError("Could not reach Mission Control. Check your connection and try again.");
   });
 
-  return () => socket.close(1000, "Player left room");
+  return {
+    close: () => socket.close(1000, "Player left room"),
+    send: (message: Exclude<ClientMessage, { type: "join" }>) => {
+      if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(message));
+      else callbacks.onError("Your crew link dropped. Reconnect before taking that action.");
+    },
+  };
 }
 
 export async function createRoom() {
